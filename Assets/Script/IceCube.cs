@@ -13,26 +13,35 @@ public class IceCube : MonoBehaviour
     public Transform cubeModel;
     public float minimumScalePercent;
 
-    public void Init(Map map, int x, int y)
+    public void Init(Map map, int x, int y, float durabilityPercent = 1)
     {
         this.map = map;
         this.x = x;
         this.y = y;
 
-        currentDurability = durability;
-        cubeModel.localScale = Vector3.one;
+        SetDurability(durability * durabilityPercent);
     }
 
     public void Burn()
     {
-        currentDurability -= Time.deltaTime;
+        SetDurability(currentDurability - Time.deltaTime);
 
-        cubeModel.localScale = Vector3.one * Mathf.Lerp(minimumScalePercent, 1, currentDurability/durability);
 
         if (currentDurability <= 0)
         {
             map.RemoveCubeAtLocation(x, y);
         }
+    }
+
+    public void Freeze()
+    {
+        SetDurability(currentDurability + Time.deltaTime);
+    }
+
+    void SetDurability(float newDurability)
+    {
+        currentDurability = Mathf.Clamp(newDurability, 0, durability);
+        cubeModel.localScale = Vector3.one * Mathf.Lerp(minimumScalePercent, 1, currentDurability / durability);
     }
 
 }
