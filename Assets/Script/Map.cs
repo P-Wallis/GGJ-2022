@@ -4,9 +4,17 @@ using UnityEngine;
 
 public class Map : MonoBehaviour
 {
+    public static Map _;
+    private void Awake()
+    {
+        if (_ == null)
+            _ = this;
+    }
+
     public GameObject iceCubePrefab;
     public GameObject hardyIceCubePrefab;
     public GameObject iceBurstPrefab;
+    public GameObject iceBurstInversePrefab;
     public GameObject bombPrefab;
     public GameObject gemPrefab;
 
@@ -41,12 +49,37 @@ public class Map : MonoBehaviour
         }
     }
 
-    void CreateCubeAtLocation(int x, int y, bool hardy = false)
+    public void CreateCubeAtWorldPosition(Vector3 pos)
     {
-        Vector3 pos = new Vector3((x - halfMap) * cubeSize, iceCubePrefab.transform.position.y, (y - halfMap) * cubeSize);
+        int x = Mathf.RoundToInt((pos.x / cubeSize) + halfMap);
+        int y = Mathf.RoundToInt((pos.z / cubeSize) + halfMap);
+
+        if(x >= 0 && x <mapSize && y>=0 && y<mapSize)
+        {
+            if(iceCubes[x,y] == null)
+            {
+                GameObject burstGO = Instantiate(iceBurstInversePrefab, WorldFromArrayPos(x,y), Quaternion.identity);
+                Destroy(burstGO, 1);
+                CreateCubeAtLocation(x, y, false, 0);
+            }
+            else
+            {
+                iceCubes[x, y].Freeze();
+            }
+        }
+    }
+
+    void CreateCubeAtLocation(int x, int y, bool hardy = false, float durabilityPercent = 1)
+    {
+        Vector3 pos = WorldFromArrayPos(x, y);
         GameObject go = Instantiate(hardy ? hardyIceCubePrefab : iceCubePrefab, pos, Quaternion.identity, this.transform);
         iceCubes[x, y] = go.GetComponent<IceCube>();
-        iceCubes[x, y].Init(this, x, y);
+        iceCubes[x, y].Init(this, x, y, durabilityPercent);
+    }
+
+    private Vector3 WorldFromArrayPos(int x, int y)
+    {
+        return new Vector3((x - halfMap) * cubeSize, iceCubePrefab.transform.position.y, (y - halfMap) * cubeSize);
     }
 
     public void RemoveCubeAtLocation(int x, int y, bool burst = true)
@@ -55,7 +88,7 @@ public class Map : MonoBehaviour
         {
             if (burst)
             {
-                GameObject burstGO = Instantiate(iceBurstPrefab, iceCubes[x, y].transform.position, Quaternion.identity);
+                GameObject burstGO = Instantiate(iceBurstPrefab, WorldFromArrayPos(x,y), Quaternion.identity);
                 Destroy(burstGO, 1);
             }
 
