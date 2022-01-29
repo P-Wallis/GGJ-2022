@@ -10,17 +10,22 @@ public class Player : MonoBehaviour
     public Transform model;
 
     public ParticleSystem fireParticles, iceParticles;
+    public Transform raycastPoint;
 
+    public float maxFireDistance;
 
     private Camera m_camera;
     private Rigidbody m_rigidbody;
     private Plane m_groundPlane;
+    private LayerMask iceLayerMask;
     void Start()
     {
         m_rigidbody = GetComponent<Rigidbody>();
         m_camera = Camera.main;
         m_groundPlane = new Plane(Vector3.up, 0);
+        iceLayerMask = LayerMask.GetMask("Ice");
     }
+
 
     Vector3 movement;
     private void Update()
@@ -29,6 +34,11 @@ public class Player : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             fireParticles.Play();
+        }
+
+        if(Input.GetMouseButton(0))
+        {
+            Burn();
         }
 
         if(Input.GetMouseButtonUp(0))
@@ -65,5 +75,20 @@ public class Player : MonoBehaviour
             return ray.GetPoint(enter);
         }
         return Vector3.zero;
+    }
+
+    void Burn()
+    {
+        RaycastHit hit;
+        if(Physics.Raycast(raycastPoint.position, raycastPoint.forward, out hit, maxFireDistance, iceLayerMask))
+        {
+            GameObject hitObject = hit.collider != null ? hit.collider.gameObject : null;
+            IceCube iceCube = hitObject !=null? hitObject.GetComponent<IceCube>() : null;
+
+            if(iceCube !=null)
+            {
+                iceCube.Burn();
+            }
+        }
     }
 }

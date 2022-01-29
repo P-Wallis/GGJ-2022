@@ -335,7 +335,7 @@ MonoBehaviour:
     type: 3}
   cubeSize: 2
   mapSize: 16
-  fillPercent: 0.123
+  fillPercent: 0.912
 --- !u!4 &645547872
 Transform:
   m_ObjectHideFlags: 0

@@ -13,4 +13,9 @@ public class IceCube : MonoBehaviour
         this.x = x;
         this.y = y;
     }
+
+    public void Burn()
+    {
+        map.RemoveCubeAtLocation(x, y);
+    }
 }

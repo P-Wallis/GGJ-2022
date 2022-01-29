@@ -40,4 +40,13 @@ public class Map : MonoBehaviour
         iceCubes[x, y] = go.GetComponent<IceCube>();
         iceCubes[x, y].Init(this, x, y);
     }
+
+    public void RemoveCubeAtLocation(int x, int y)
+    {
+        if(iceCubes[x,y] != null)
+        {
+            Destroy(iceCubes[x, y].gameObject);
+            iceCubes[x, y] = null;
+        }
+    }
 }
