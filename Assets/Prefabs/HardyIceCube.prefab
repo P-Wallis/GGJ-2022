@@ -62,6 +62,8 @@ MonoBehaviour:
   durability: 2
   cubeModel: {fileID: 4592055680981309460}
   minimumScalePercent: 0.5
+  bombPercent: 0.25
+  gemPercent: 0.666
 --- !u!1 &8705479326529893010
 GameObject:
   m_ObjectHideFlags: 0

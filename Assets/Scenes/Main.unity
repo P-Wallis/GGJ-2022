@@ -341,13 +341,13 @@ MonoBehaviour:
     type: 3}
   bombPrefab: {fileID: 7492773917100042918, guid: ddecbcf66429e4540a7453993202ce5d,
     type: 3}
-  gemPrefab: {fileID: 0}
+  gemPrefabs:
+  - {fileID: 1524295687725455877, guid: a4f6901b43cd7444d9eb00636f1ee7c7, type: 3}
+  - {fileID: 1330033189385536353, guid: 796bd5b76be7efb4daddc13caa89510b, type: 3}
   cubeSize: 2
   mapSize: 16
-  fillPercent: 0.103
-  hardyPercent: 0.127
-  bombPercent: 0.1
-  gemPercent: 0.1
+  fillPercent: 0.9
+  hardyPercent: 0.3
 --- !u!4 &645547872
 Transform:
   m_ObjectHideFlags: 0
