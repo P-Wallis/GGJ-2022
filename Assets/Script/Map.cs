@@ -7,11 +7,16 @@ public class Map : MonoBehaviour
     public GameObject iceCubePrefab;
     public GameObject hardyIceCubePrefab;
     public GameObject iceBurstPrefab;
+    public GameObject bombPrefab;
+    public GameObject gemPrefab;
+
     public float cubeSize = 1;
     public int mapSize;
     float halfMap;
     [Range(0,1)] public float fillPercent = 0.5f;
     [Range(0, 1)] public float hardyPercent = 0.5f;
+    [Range(0, 1)] public float bombPercent = 0.1f;
+    [Range(0, 1)] public float gemPercent = 0.1f;
 
     private IceCube[,] iceCubes;
 
@@ -53,6 +58,17 @@ public class Map : MonoBehaviour
                 GameObject burstGO = Instantiate(iceBurstPrefab, iceCubes[x, y].transform.position, Quaternion.identity);
                 Destroy(burstGO, 1);
             }
+
+            if (Random.value < bombPercent)
+            {
+                GameObject bombGO = Instantiate(bombPrefab, iceCubes[x, y].transform.position, Quaternion.identity);
+                Bomb bomb = bombGO.GetComponent<Bomb>();
+                if(bomb!=null)
+                {
+                    bomb.LightTheFuse();
+                }
+            }
+
             Destroy(iceCubes[x, y].gameObject);
             iceCubes[x, y] = null;
         }

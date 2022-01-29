@@ -337,10 +337,15 @@ MonoBehaviour:
     type: 3}
   iceBurstPrefab: {fileID: 9106596439065482768, guid: df83186575a614593808dba9bac03ce7,
     type: 3}
+  bombPrefab: {fileID: 7492773917100042918, guid: ddecbcf66429e4540a7453993202ce5d,
+    type: 3}
+  gemPrefab: {fileID: 0}
   cubeSize: 2
   mapSize: 16
   fillPercent: 0.912
   hardyPercent: 0.127
+  bombPercent: 0.1
+  gemPercent: 0.1
 --- !u!4 &645547872
 Transform:
   m_ObjectHideFlags: 0

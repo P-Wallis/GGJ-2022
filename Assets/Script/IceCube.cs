@@ -34,4 +34,5 @@ public class IceCube : MonoBehaviour
             map.RemoveCubeAtLocation(x, y);
         }
     }
+
 }
