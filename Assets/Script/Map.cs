@@ -25,7 +25,7 @@ public class Map : MonoBehaviour
                     continue;
                 }
 
-                if (Random.value > fillPercent)
+                if (Random.value < fillPercent)
                 {
                     CreateCubeAtLocation(x, y);
                 }

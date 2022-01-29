@@ -9,31 +9,61 @@ public class Player : MonoBehaviour
     public float rotationSpeed = 1;
     public Transform model;
 
+    public ParticleSystem fireParticles, iceParticles;
+
+
+    private Camera m_camera;
     private Rigidbody m_rigidbody;
+    private Plane m_groundPlane;
     void Start()
     {
         m_rigidbody = GetComponent<Rigidbody>();
+        m_camera = Camera.main;
+        m_groundPlane = new Plane(Vector3.up, 0);
     }
 
     Vector3 movement;
     private void Update()
     {
-        movement = new Vector3(
-            Input.GetAxis("Horizontal"),
-            0,
-            Input.GetAxis("Vertical")
-            );
-
-        Quaternion newRot = model.transform.rotation;
-        if (movement.magnitude > 0.01f)
+        // Fire/Ice
+        if (Input.GetMouseButtonDown(0))
         {
-            newRot = Quaternion.Euler(0, Mathf.Atan2(movement.x, movement.z) * Mathf.Rad2Deg, 0);
+            fireParticles.Play();
         }
-        model.transform.rotation = Quaternion.Lerp(model.transform.rotation, newRot, rotationSpeed * Time.deltaTime);
+
+        if(Input.GetMouseButtonUp(0))
+        {
+            fireParticles.Stop();
+        }
+
+        Vector3 cursorPoint = ScreenToGroundPoint(Input.mousePosition);
+
+        Quaternion newRot = Quaternion.Euler(0, Mathf.Atan2(cursorPoint.x - transform.position.x, cursorPoint.z - transform.position.z) * Mathf.Rad2Deg, 0);
+        model.transform.rotation = newRot; //Quaternion.Lerp(model.transform.rotation, newRot, rotationSpeed * Time.deltaTime);
+
+
+        // Movement
+        movement = new Vector3(
+            Input.GetAxisRaw("Horizontal"),
+            0,
+            Input.GetAxisRaw("Vertical")
+            ).normalized;
     }
 
     void FixedUpdate()
     {
         m_rigidbody.velocity = movement * speed;
+    }
+
+    private Vector3 ScreenToGroundPoint(Vector2 screenPos)
+    {
+        Ray ray = m_camera.ScreenPointToRay(screenPos);
+
+        float enter = 0.0f;
+        if (m_groundPlane.Raycast(ray, out enter))
+        {
+            return ray.GetPoint(enter);
+        }
+        return Vector3.zero;
     }
 }
