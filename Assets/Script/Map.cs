@@ -5,6 +5,7 @@ using UnityEngine;
 public class Map : MonoBehaviour
 {
     public GameObject iceCubePrefab;
+    public GameObject iceBurstPrefab;
     public float cubeSize = 1;
     public int mapSize;
     float halfMap;
@@ -41,10 +42,15 @@ public class Map : MonoBehaviour
         iceCubes[x, y].Init(this, x, y);
     }
 
-    public void RemoveCubeAtLocation(int x, int y)
+    public void RemoveCubeAtLocation(int x, int y, bool burst = true)
     {
-        if(iceCubes[x,y] != null)
+        if (iceCubes[x,y] != null)
         {
+            if (burst)
+            {
+                GameObject burstGO = Instantiate(iceBurstPrefab, iceCubes[x, y].transform.position, Quaternion.identity);
+                Destroy(burstGO, 1);
+            }
             Destroy(iceCubes[x, y].gameObject);
             iceCubes[x, y] = null;
         }

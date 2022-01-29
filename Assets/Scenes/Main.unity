@@ -333,6 +333,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   iceCubePrefab: {fileID: 5909262283410408979, guid: 8ed971ab9e8504d7f9c32c378ce8893d,
     type: 3}
+  iceBurstPrefab: {fileID: 9106596439065482768, guid: df83186575a614593808dba9bac03ce7,
+    type: 3}
   cubeSize: 2
   mapSize: 16
   fillPercent: 0.912
