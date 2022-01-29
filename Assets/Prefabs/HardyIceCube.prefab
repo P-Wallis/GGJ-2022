@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5909262283410408976}
   - component: {fileID: 1758345552335113202}
   m_Layer: 6
-  m_Name: IceCube
+  m_Name: HardyIceCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e37d808a2f9324db5829b91fbfe0a24d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  durability: 0.25
+  durability: 2
   cubeModel: {fileID: 4592055680981309460}
   minimumScalePercent: 0.5
 --- !u!1 &8705479326529893010
@@ -123,7 +123,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b300ff407244e417497aff6b8a9d81df, type: 2}
+  - {fileID: 2100000, guid: d61dd4124cfe34b4f90153a6ffbdb191, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
