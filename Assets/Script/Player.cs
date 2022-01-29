@@ -30,6 +30,14 @@ public class Player : MonoBehaviour
         iceLayerMask = LayerMask.GetMask("Ice");
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Gem")
+        {
+            GemCounter._.IncrementCount();
+            Destroy(other.gameObject);
+        }
+    }
 
     Vector3 movement;
     private void Update()
