@@ -17,8 +17,6 @@ public class Player : MonoBehaviour
 
     public float maxFireDistance;
 
-    private int gemsCollected = 0;
-
     private Camera m_camera;
     private Rigidbody m_rigidbody;
     private Plane m_groundPlane;
@@ -36,7 +34,7 @@ public class Player : MonoBehaviour
     {
         if(other.tag == "Gem")
         {
-            gemsCollected++;
+            GemCounter._.IncrementCount();
             Destroy(other.gameObject);
         }
     }
