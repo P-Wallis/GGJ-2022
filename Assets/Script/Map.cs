@@ -5,11 +5,13 @@ using UnityEngine;
 public class Map : MonoBehaviour
 {
     public GameObject iceCubePrefab;
+    public GameObject hardyIceCubePrefab;
     public GameObject iceBurstPrefab;
     public float cubeSize = 1;
     public int mapSize;
     float halfMap;
     [Range(0,1)] public float fillPercent = 0.5f;
+    [Range(0, 1)] public float hardyPercent = 0.5f;
 
     private IceCube[,] iceCubes;
 
@@ -28,16 +30,16 @@ public class Map : MonoBehaviour
 
                 if (Random.value < fillPercent)
                 {
-                    CreateCubeAtLocation(x, y);
+                    CreateCubeAtLocation(x, y, Random.value < hardyPercent);
                 }
             }
         }
     }
 
-    void CreateCubeAtLocation(int x, int y)
+    void CreateCubeAtLocation(int x, int y, bool hardy = false)
     {
         Vector3 pos = new Vector3((x - halfMap) * cubeSize, iceCubePrefab.transform.position.y, (y - halfMap) * cubeSize);
-        GameObject go = Instantiate(iceCubePrefab, pos, Quaternion.identity, this.transform);
+        GameObject go = Instantiate(hardy ? hardyIceCubePrefab : iceCubePrefab, pos, Quaternion.identity, this.transform);
         iceCubes[x, y] = go.GetComponent<IceCube>();
         iceCubes[x, y].Init(this, x, y);
     }
