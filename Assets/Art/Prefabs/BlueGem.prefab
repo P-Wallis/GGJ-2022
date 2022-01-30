@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 1819149199581534683}
   - component: {fileID: 3355517186389137022}
   - component: {fileID: 681668981192499892}
+  - component: {fileID: 1101381654971032636}
   m_Layer: 0
-  m_Name: prop_gem_diamond
-  m_TagString: Untagged
+  m_Name: BlueGem
+  m_TagString: Gem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -61,7 +62,11 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
+<<<<<<< HEAD:Assets/Art/Prefabs/prop_gem_diamond.prefab
   - {fileID: 2100000, guid: 51bb61adfaca3aa49b8c71ab8505ec8b, type: 2}
+=======
+  - {fileID: 2100000, guid: ae2e7bf16a3b2484f84d6bd65c0d7309, type: 2}
+>>>>>>> main:Assets/Art/Prefabs/BlueGem.prefab
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -83,3 +88,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!135 &1101381654971032636
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1330033189385536353}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.35872993
+  m_Center: {x: 0.00000007450582, y: 0.30460304, z: 1.0821674e-15}

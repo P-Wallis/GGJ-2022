@@ -17,6 +17,8 @@ public class Player : MonoBehaviour
 
     public float maxFireDistance;
 
+    public GameObject gemPickupSFXPrefab;
+
     private Camera m_camera;
     private Rigidbody m_rigidbody;
     private Plane m_groundPlane;
@@ -30,6 +32,15 @@ public class Player : MonoBehaviour
         iceLayerMask = LayerMask.GetMask("Ice");
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Gem")
+        {
+            GemCounter._.IncrementCount();
+            Instantiate(gemPickupSFXPrefab, transform.position, Quaternion.identity);
+            Destroy(other.gameObject);
+        }
+    }
 
     Vector3 movement;
     private void Update()

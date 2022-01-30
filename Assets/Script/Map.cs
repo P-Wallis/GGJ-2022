@@ -16,15 +16,15 @@ public class Map : MonoBehaviour
     public GameObject iceBurstPrefab;
     public GameObject iceBurstInversePrefab;
     public GameObject bombPrefab;
-    public GameObject gemPrefab;
+    public GameObject[] gemPrefabs;
+
+    public GameObject crunchSFXPrefab;
 
     public float cubeSize = 1;
     public int mapSize;
     float halfMap;
     [Range(0,1)] public float fillPercent = 0.5f;
     [Range(0, 1)] public float hardyPercent = 0.5f;
-    [Range(0, 1)] public float bombPercent = 0.1f;
-    [Range(0, 1)] public float gemPercent = 0.1f;
 
     private IceCube[,] iceCubes;
 
@@ -58,7 +58,9 @@ public class Map : MonoBehaviour
         {
             if(iceCubes[x,y] == null)
             {
-                GameObject burstGO = Instantiate(iceBurstInversePrefab, WorldFromArrayPos(x,y), Quaternion.identity);
+                Vector3 position = WorldFromArrayPos(x, y);
+                GameObject burstGO = Instantiate(iceBurstInversePrefab, position, Quaternion.identity, transform);
+                Instantiate(crunchSFXPrefab, position, Quaternion.identity); // play sound
                 Destroy(burstGO, 1);
                 CreateCubeAtLocation(x, y, false, 0);
             }
@@ -92,7 +94,7 @@ public class Map : MonoBehaviour
                 Destroy(burstGO, 1);
             }
 
-            if (Random.value < bombPercent)
+            if (Random.value < iceCubes[x, y].bombPercent)
             {
                 GameObject bombGO = Instantiate(bombPrefab, iceCubes[x, y].transform.position, Quaternion.identity);
                 Bomb bomb = bombGO.GetComponent<Bomb>();
@@ -100,6 +102,10 @@ public class Map : MonoBehaviour
                 {
                     bomb.LightTheFuse();
                 }
+            }else if (Random.value < iceCubes[x, y].gemPercent)
+            {
+                GameObject gemGO = Instantiate(gemPrefabs[Random.Range(0,gemPrefabs.Length)], iceCubes[x, y].transform.position, Quaternion.identity);
+                gemGO.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
             }
 
             Destroy(iceCubes[x, y].gameObject);

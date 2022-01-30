@@ -13,6 +13,9 @@ public class IceCube : MonoBehaviour
     public Transform cubeModel;
     public float minimumScalePercent;
 
+    [Range(0, 1)] public float bombPercent = 0.1f;
+    [Range(0, 1)] public float gemPercent = 0.1f;
+
     public void Init(Map map, int x, int y, float durabilityPercent = 1)
     {
         this.map = map;
