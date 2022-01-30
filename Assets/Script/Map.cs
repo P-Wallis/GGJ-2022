@@ -4,11 +4,25 @@ using UnityEngine;
 
 public class Map : MonoBehaviour
 {
+    public static Map _;
+    private void Awake()
+    {
+        if (_ == null)
+            _ = this;
+    }
+
     public GameObject iceCubePrefab;
+    public GameObject hardyIceCubePrefab;
+    public GameObject iceBurstPrefab;
+    public GameObject iceBurstInversePrefab;
+    public GameObject bombPrefab;
+    public GameObject[] gemPrefabs;
+
     public float cubeSize = 1;
     public int mapSize;
     float halfMap;
     [Range(0,1)] public float fillPercent = 0.5f;
+    [Range(0, 1)] public float hardyPercent = 0.5f;
 
     private IceCube[,] iceCubes;
 
@@ -27,24 +41,69 @@ public class Map : MonoBehaviour
 
                 if (Random.value < fillPercent)
                 {
-                    CreateCubeAtLocation(x, y);
+                    CreateCubeAtLocation(x, y, Random.value < hardyPercent);
                 }
             }
         }
     }
 
-    void CreateCubeAtLocation(int x, int y)
+    public void CreateCubeAtWorldPosition(Vector3 pos)
     {
-        Vector3 pos = new Vector3((x - halfMap) * cubeSize, iceCubePrefab.transform.position.y, (y - halfMap) * cubeSize);
-        GameObject go = Instantiate(iceCubePrefab, pos, Quaternion.identity, this.transform);
-        iceCubes[x, y] = go.GetComponent<IceCube>();
-        iceCubes[x, y].Init(this, x, y);
+        int x = Mathf.RoundToInt((pos.x / cubeSize) + halfMap);
+        int y = Mathf.RoundToInt((pos.z / cubeSize) + halfMap);
+
+        if(x >= 0 && x <mapSize && y>=0 && y<mapSize)
+        {
+            if(iceCubes[x,y] == null)
+            {
+                GameObject burstGO = Instantiate(iceBurstInversePrefab, WorldFromArrayPos(x,y), Quaternion.identity);
+                Destroy(burstGO, 1);
+                CreateCubeAtLocation(x, y, false, 0);
+            }
+            else
+            {
+                iceCubes[x, y].Freeze();
+            }
+        }
     }
 
-    public void RemoveCubeAtLocation(int x, int y)
+    void CreateCubeAtLocation(int x, int y, bool hardy = false, float durabilityPercent = 1)
     {
-        if(iceCubes[x,y] != null)
+        Vector3 pos = WorldFromArrayPos(x, y);
+        GameObject go = Instantiate(hardy ? hardyIceCubePrefab : iceCubePrefab, pos, Quaternion.identity, this.transform);
+        iceCubes[x, y] = go.GetComponent<IceCube>();
+        iceCubes[x, y].Init(this, x, y, durabilityPercent);
+    }
+
+    private Vector3 WorldFromArrayPos(int x, int y)
+    {
+        return new Vector3((x - halfMap) * cubeSize, iceCubePrefab.transform.position.y, (y - halfMap) * cubeSize);
+    }
+
+    public void RemoveCubeAtLocation(int x, int y, bool burst = true)
+    {
+        if (iceCubes[x,y] != null)
         {
+            if (burst)
+            {
+                GameObject burstGO = Instantiate(iceBurstPrefab, WorldFromArrayPos(x,y), Quaternion.identity);
+                Destroy(burstGO, 1);
+            }
+
+            if (Random.value < iceCubes[x, y].bombPercent)
+            {
+                GameObject bombGO = Instantiate(bombPrefab, iceCubes[x, y].transform.position, Quaternion.identity);
+                Bomb bomb = bombGO.GetComponent<Bomb>();
+                if(bomb!=null)
+                {
+                    bomb.LightTheFuse();
+                }
+            }else if (Random.value < iceCubes[x, y].gemPercent)
+            {
+                GameObject gemGO = Instantiate(gemPrefabs[Random.Range(0,gemPrefabs.Length)], iceCubes[x, y].transform.position, Quaternion.identity);
+                gemGO.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
+            }
+
             Destroy(iceCubes[x, y].gameObject);
             iceCubes[x, y] = null;
         }

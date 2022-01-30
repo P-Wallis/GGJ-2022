@@ -5,12 +5,15 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Player : MonoBehaviour
 {
+    public enum Weapon { FIRE, ICE }
+
     public float speed = 1;
     public float rotationSpeed = 1;
     public Transform model;
 
     public ParticleSystem fireParticles, iceParticles;
     public Transform raycastPoint;
+    public Transform cubeCreatePoint;
 
     public float maxFireDistance;
 
@@ -18,6 +21,7 @@ public class Player : MonoBehaviour
     private Rigidbody m_rigidbody;
     private Plane m_groundPlane;
     private LayerMask iceLayerMask;
+    private Weapon currentWeapon = Weapon.FIRE;
     void Start()
     {
         m_rigidbody = GetComponent<Rigidbody>();
@@ -26,26 +30,81 @@ public class Player : MonoBehaviour
         iceLayerMask = LayerMask.GetMask("Ice");
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Gem")
+        {
+            GemCounter._.IncrementCount();
+            Destroy(other.gameObject);
+        }
+    }
 
     Vector3 movement;
     private void Update()
     {
-        // Fire/Ice
-        if (Input.GetMouseButtonDown(0))
+        // Weapons
+        switch (currentWeapon)
         {
-            fireParticles.Play();
+            case Weapon.FIRE:
+                if (Input.GetMouseButtonDown(0))
+                {
+                    fireParticles.Play();
+                }
+
+                if (Input.GetMouseButton(0))
+                {
+                    Burn();
+                }
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    fireParticles.Stop();
+                }
+                break;
+            case Weapon.ICE:
+                if (Input.GetMouseButtonDown(0))
+                {
+                    iceParticles.Play();
+                }
+
+                if (Input.GetMouseButton(0))
+                {
+                    Map._.CreateCubeAtWorldPosition(cubeCreatePoint.position);
+                }
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    iceParticles.Stop();
+                }
+                break;
         }
 
-        if(Input.GetMouseButton(0))
+        // Switch Weapon
+        if(Input.GetKeyDown(KeyCode.Space))
         {
-            Burn();
+            if (fireParticles.isPlaying)
+                fireParticles.Stop();
+            if (iceParticles.isPlaying)
+                iceParticles.Stop();
+
+            currentWeapon = currentWeapon == Weapon.FIRE ? Weapon.ICE : Weapon.FIRE;
+
+            if (Input.GetMouseButton(0))
+            {
+                switch(currentWeapon)
+                {
+                    case Weapon.FIRE:
+                        fireParticles.Play();
+                        break;
+                    case Weapon.ICE:
+                        iceParticles.Play();
+                        break;
+                }
+            }
         }
 
-        if(Input.GetMouseButtonUp(0))
-        {
-            fireParticles.Stop();
-        }
 
+        // Rotation
         Vector3 cursorPoint = ScreenToGroundPoint(Input.mousePosition);
 
         Quaternion newRot = Quaternion.Euler(0, Mathf.Atan2(cursorPoint.x - transform.position.x, cursorPoint.z - transform.position.z) * Mathf.Rad2Deg, 0);
