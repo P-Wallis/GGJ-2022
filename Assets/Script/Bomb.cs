@@ -8,6 +8,7 @@ public class Bomb : MonoBehaviour
     public float explosionRadius = 5;
     public MeshRenderer bombMesh;
     public GameObject explosion;
+    public GameObject bombSFXPrefab;
 
     private MaterialPropertyBlock mpb;
     private Color bombStartColor;
@@ -16,6 +17,7 @@ public class Bomb : MonoBehaviour
         mpb = new MaterialPropertyBlock();
         bombStartColor = bombMesh.material.color;
         StartCoroutine(Explode(fuseLength));
+        Instantiate(bombSFXPrefab);
     }
 
     IEnumerator Explode(float time)
