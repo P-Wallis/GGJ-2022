@@ -46,7 +46,7 @@ public class Bomb : MonoBehaviour
             Vector3 direction = Player._.transform.position - transform.position;
             direction.y = 0;
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, direction.normalized, out hit, Mathf.Max(direction.magnitude, explosionRadius)))
+            if (Physics.Raycast(transform.position, direction.normalized, out hit, Mathf.Min(direction.magnitude, explosionRadius)))
             {
                 if(hit.rigidbody != null && hit.rigidbody.gameObject.tag == "Player")
                 {
