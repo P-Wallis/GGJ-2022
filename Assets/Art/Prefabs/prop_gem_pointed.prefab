@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2192323340867813567}
   - component: {fileID: 3009365403101450010}
   - component: {fileID: 1019958294160522192}
-  - component: {fileID: 8071343341356803584}
+  - component: {fileID: -2566931253086670609}
   m_Layer: 0
   m_Name: prop_gem_pointed
   m_TagString: Gem
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 1524295687725455877}
   m_LocalRotation: {x: 0.000000015454312, y: -0.7071068, z: 0.000000015454312, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -84,7 +84,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &8071343341356803584
+--- !u!135 &-2566931253086670609
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,5 +95,5 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5221197
-  m_Center: {x: -0.08872215, y: 0.30353367, z: 1.0783682e-15}
+  m_Radius: 1.0442394
+  m_Center: {x: -0.17744426, y: 0.6070672, z: 2.156736e-15}

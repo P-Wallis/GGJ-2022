@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 6068414835333734212}
   - component: {fileID: 7176640699524714721}
   - component: {fileID: 4934955599958434859}
+  - component: {fileID: 6693577057179908124}
   m_Layer: 0
-  m_Name: prop_gem_hedra
-  m_TagString: Untagged
+  m_Name: HedraGem
+  m_TagString: Gem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -83,3 +84,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!135 &6693577057179908124
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6880523351240427006}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.6655974
+  m_Center: {x: 0.00000017881398, y: 0.6738754, z: 0.00000014901164}

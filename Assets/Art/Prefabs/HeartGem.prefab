@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 4020991822300516664}
   - component: {fileID: 27783934510505629}
   - component: {fileID: 2848036513942792791}
+  - component: {fileID: 3240859740876695791}
   m_Layer: 0
-  m_Name: prop_gem_heart
-  m_TagString: Untagged
+  m_Name: HeartGem
+  m_TagString: Gem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -83,3 +84,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!135 &3240859740876695791
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4361382671063534466}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.6995751
+  m_Center: {x: 0.09426425, y: 0.641795, z: 0.00000008940699}

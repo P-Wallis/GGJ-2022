@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1819149199581534683}
   - component: {fileID: 3355517186389137022}
   - component: {fileID: 681668981192499892}
-  - component: {fileID: 1101381654971032636}
+  - component: {fileID: 616198510669336212}
   m_Layer: 0
   m_Name: prop_gem_diamond
   m_TagString: Gem
@@ -84,7 +84,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &1101381654971032636
+--- !u!135 &616198510669336212
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,5 +95,5 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.35872993
-  m_Center: {x: 0.00000007450582, y: 0.30460304, z: 1.0821674e-15}
+  m_Radius: 0.71745986
+  m_Center: {x: 0.00000011920932, y: 0.609206, z: 2.1643346e-15}
