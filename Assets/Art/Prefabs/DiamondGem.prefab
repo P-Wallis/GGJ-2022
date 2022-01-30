@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 681668981192499892}
   - component: {fileID: 616198510669336212}
   m_Layer: 0
-  m_Name: prop_gem_diamond
+  m_Name: DiamondGem
   m_TagString: Gem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
