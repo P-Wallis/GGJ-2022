@@ -5,6 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Player : MonoBehaviour
 {
+    public static Player _;
+    private void Awake()
+    {
+        if (_ == null)
+            _ = this;
+    }
+
     public enum Weapon { FIRE, ICE }
 
     public float speed = 1;
@@ -18,6 +25,8 @@ public class Player : MonoBehaviour
     public float maxFireDistance;
 
     public GameObject gemPickupSFXPrefab;
+
+    public GameObject[] gemPrefabs;
 
     private Camera m_camera;
     private Rigidbody m_rigidbody;
@@ -152,5 +161,37 @@ public class Player : MonoBehaviour
                 iceCube.Burn();
             }
         }
+    }
+
+    public void DropGems()
+    {
+        if(GemCounter._.Count > 0)
+        {
+            int half = Mathf.CeilToInt(GemCounter._.Count / 2f);
+            GemCounter._.SetCount(GemCounter._.Count - half);
+
+            int quarter = Mathf.CeilToInt(GemCounter._.Count / 2f);
+            for (int i=0; i<quarter; i++)
+            {
+                Vector3 vector = Random.insideUnitSphere;
+                GameObject go = Instantiate(gemPrefabs[Random.Range(0, gemPrefabs.Length)], transform.position + vector, Quaternion.identity);
+                Rigidbody rb = go.AddComponent<Rigidbody>();
+                Collider cl = go.GetComponent<Collider>();
+
+                cl.isTrigger = false;
+                rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+                rb.AddForce(vector * 10);
+
+                StartCoroutine(GemThrowInfo(rb, cl));
+            }
+        }
+    }
+
+    IEnumerator GemThrowInfo(Rigidbody rb, Collider cl)
+    {
+        yield return new WaitForSeconds(0.7f);
+
+        cl.isTrigger = true;
+        Destroy(rb);
     }
 }

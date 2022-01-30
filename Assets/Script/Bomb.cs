@@ -39,6 +39,21 @@ public class Bomb : MonoBehaviour
         }
 
         explosion.SetActive(true);
+
+        if(Player._!=null)
+        {
+            Vector3 direction = Player._.transform.position - transform.position;
+            direction.y = 0;
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, direction.normalized, out hit, direction.magnitude))
+            {
+                if(hit.rigidbody != null && hit.rigidbody.gameObject.tag == "Player")
+                {
+                    Player._.DropGems();
+                }
+            }
+        }
+
         yield return new WaitForSeconds(0.1f);
         Destroy(gameObject);
     }
