@@ -448,6 +448,8 @@ MonoBehaviour:
   gemPrefabs:
   - {fileID: 1524295687725455877, guid: a4f6901b43cd7444d9eb00636f1ee7c7, type: 3}
   - {fileID: 1330033189385536353, guid: 796bd5b76be7efb4daddc13caa89510b, type: 3}
+  - {fileID: 6880523351240427006, guid: 3eb37362af6c6c74799b54343e3a5015, type: 3}
+  - {fileID: 4361382671063534466, guid: 770f4d5946562774aa2678fd703d970d, type: 3}
   crunchSFXPrefab: {fileID: 8492258720104937833, guid: 1292851f5caec46fabb3615d98e47009,
     type: 3}
   cubeSize: 2
