@@ -12,18 +12,26 @@ public class Bomb : MonoBehaviour
 
     private MaterialPropertyBlock mpb;
     private Color bombStartColor;
+    private AudioSource source;
     public void LightTheFuse()
     {
         mpb = new MaterialPropertyBlock();
         bombStartColor = bombMesh.material.color;
+        source = GetComponent<AudioSource>();
         StartCoroutine(Explode(fuseLength));
-        Instantiate(bombSFXPrefab);
     }
 
     IEnumerator Explode(float time)
     {
         float percent = 0;
         float dt = 1f / time;
+
+        if(source!=null)
+        {
+            source.time = Mathf.Clamp(source.clip.length - fuseLength, 0, source.clip.length);
+            source.loop = false;
+            source.Play();
+        }
 
         while(percent<1)
         {
@@ -42,8 +50,9 @@ public class Bomb : MonoBehaviour
         }
 
         explosion.SetActive(true);
+        Instantiate(bombSFXPrefab, transform.position, Quaternion.identity);
 
-        if(Player._!=null)
+        if (Player._!=null)
         {
             Vector3 direction = Player._.transform.position - transform.position;
             direction.y = 0;

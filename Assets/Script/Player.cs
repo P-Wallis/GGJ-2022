@@ -49,10 +49,12 @@ public class Player : MonoBehaviour
     public Image weaponPanel;
     public TextMeshProUGUI weaponText;
 
+    public AudioClip fireSound, iceSound;
+
     private Animator m_animator;
     private Camera m_camera;
     private Rigidbody m_rigidbody;
-    private AudioSource m_audioFire;
+    private AudioSource m_weaponSoundSource;
     private Plane m_groundPlane;
     private LayerMask iceLayerMask;
     private Weapon currentWeapon;
@@ -60,7 +62,7 @@ public class Player : MonoBehaviour
     IEnumerator Start()
     {
         m_rigidbody = GetComponent<Rigidbody>();
-        m_audioFire = GetComponent<AudioSource>();
+        m_weaponSoundSource = GetComponent<AudioSource>();
         m_camera = Camera.main;
         m_groundPlane = new Plane(Vector3.up, 0);
         iceLayerMask = LayerMask.GetMask("Ice");
@@ -142,7 +144,7 @@ public class Player : MonoBehaviour
                 {
                     fireParticles.Play();
                     attackWeightTarget = 1;
-                    m_audioFire.Play();
+                    m_weaponSoundSource.Play();
                 }
 
                 if (Input.GetMouseButton(0))
@@ -154,7 +156,7 @@ public class Player : MonoBehaviour
                 {
                     fireParticles.Stop();
                     attackWeightTarget = 0;
-                    m_audioFire.Stop();
+                    m_weaponSoundSource.Stop();
                 }
                 break;
             case Weapon.ICE:
@@ -162,6 +164,7 @@ public class Player : MonoBehaviour
                 {
                     iceParticles.Play();
                     attackWeightTarget = 1;
+                    m_weaponSoundSource.Play();
                 }
 
                 if (Input.GetMouseButton(0))
@@ -173,6 +176,7 @@ public class Player : MonoBehaviour
                 {
                     iceParticles.Stop();
                     attackWeightTarget = 0;
+                    m_weaponSoundSource.Stop();
                 }
                 break;
         }
@@ -216,6 +220,8 @@ public class Player : MonoBehaviour
 
         weaponPanel.color = weapon == Weapon.FIRE ? new Color(1, 0.7f, 0.7f) : new Color(0.7f, 0.8f, 1);
         weaponText.text = "Current Element: " + weapon.ToString();
+        m_weaponSoundSource.Stop();
+        m_weaponSoundSource.clip = weapon == Weapon.FIRE ? fireSound : iceSound;
 
         if (fireParticles.isPlaying)
             fireParticles.Stop();
@@ -224,6 +230,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
+            m_weaponSoundSource.Play();
             switch (weapon)
             {
                 case Weapon.FIRE:
