@@ -12059,6 +12059,7 @@ MonoBehaviour:
   speed: 5
   rotationSpeed: 10
   model: {fileID: 8857213610338687894}
+  highscoreCount: 10
   fireParticles: {fileID: 6993400198675316409}
   iceParticles: {fileID: 5937842739664262620}
   raycastPoint: {fileID: 7155629529353908273}
@@ -12073,6 +12074,11 @@ MonoBehaviour:
   - {fileID: 6880523351240427006, guid: 3eb37362af6c6c74799b54343e3a5015, type: 3}
   startPanel: {fileID: 0}
   startText: {fileID: 0}
+  timerLength: 90
+  timerText: {fileID: 0}
+  endPanel: {fileID: 0}
+  endScoreText: {fileID: 0}
+  endHighScoreListText: {fileID: 0}
 --- !u!54 &1640482361
 Rigidbody:
   m_ObjectHideFlags: 0
