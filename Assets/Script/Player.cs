@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Player : MonoBehaviour
 {
+    const string WALK_FORWARD = "WalkForward";
+
     public static Player _;
     private void Awake()
     {
@@ -28,6 +30,8 @@ public class Player : MonoBehaviour
 
     public GameObject[] gemPrefabs;
 
+
+    private Animator m_animator;
     private Camera m_camera;
     private Rigidbody m_rigidbody;
     private Plane m_groundPlane;
@@ -39,6 +43,7 @@ public class Player : MonoBehaviour
         m_camera = Camera.main;
         m_groundPlane = new Plane(Vector3.up, 0);
         iceLayerMask = LayerMask.GetMask("Ice");
+        m_animator = GetComponentInChildren<Animator>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -129,11 +134,22 @@ public class Player : MonoBehaviour
             0,
             Input.GetAxisRaw("Vertical")
             ).normalized;
+
+        Vector3 lookDir = cursorPoint - transform.position;
+        lookDir.y = 0;
+        m_animator.SetFloat(WALK_FORWARD, Vector3.Dot(lookDir, movement)); ;
     }
 
     void FixedUpdate()
     {
-        m_rigidbody.velocity = movement * speed;
+        if (!exploding)
+        {
+            m_rigidbody.velocity = movement * speed;
+        }
+        else
+        {
+            m_rigidbody.AddForce(explodeDir.normalized * 100);
+        }
     }
 
     private Vector3 ScreenToGroundPoint(Vector2 screenPos)
@@ -163,9 +179,13 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void DropGems()
+    private bool exploding = false;
+    private Vector3 explodeDir;
+    public void Explode(Vector3 explosionPos)
     {
-        if(GemCounter._.Count > 0)
+        exploding = true;
+        explodeDir = (transform.position - explosionPos);
+        if (GemCounter._.Count > 0)
         {
             int half = Mathf.CeilToInt(GemCounter._.Count / 2f);
             GemCounter._.SetCount(GemCounter._.Count - half);
@@ -182,12 +202,19 @@ public class Player : MonoBehaviour
                 rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
                 rb.AddForce(vector * 10);
 
-                StartCoroutine(GemThrowInfo(rb, cl));
+                StartCoroutine(CleanUpGemThrow(rb, cl));
             }
         }
+        StartCoroutine(CleanUpExlode());
     }
 
-    IEnumerator GemThrowInfo(Rigidbody rb, Collider cl)
+    IEnumerator CleanUpExlode()
+    {
+        yield return new WaitForSeconds(0.7f);
+        exploding = false;
+    }
+
+    IEnumerator CleanUpGemThrow(Rigidbody rb, Collider cl)
     {
         yield return new WaitForSeconds(0.7f);
 
