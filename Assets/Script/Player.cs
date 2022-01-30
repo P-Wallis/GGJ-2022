@@ -22,6 +22,8 @@ public class Player : MonoBehaviour
     public float rotationSpeed = 1;
     public Transform model;
 
+    public int highscoreCount = 10;
+
     public ParticleSystem fireParticles, iceParticles;
     public Transform raycastPoint;
     public Transform cubeCreatePoint;
@@ -36,6 +38,9 @@ public class Player : MonoBehaviour
     public TextMeshProUGUI startText;
     public float timerLength = 90f;
     public TextMeshProUGUI timerText;
+    public GameObject endPanel;
+    public TextMeshProUGUI endScoreText;
+    public TextMeshProUGUI endHighScoreListText;
 
     private Animator m_animator;
     private Camera m_camera;
@@ -53,6 +58,7 @@ public class Player : MonoBehaviour
         m_animator = GetComponentInChildren<Animator>();
         m_animator.SetLayerWeight(1, 0);
 
+        endPanel.SetActive(false);
         startPanel.SetActive(true);
         for (int i = 3; i > 0; i--)
         {
@@ -68,11 +74,29 @@ public class Player : MonoBehaviour
         while (timer > 0)
         {
             timer -= Time.deltaTime;
-            timerText.text = Mathf.FloorToInt(timer / 60) + " minutes " + Mathf.FloorToInt(timer % 60) + " seconds";
+            timerText.text = (Mathf.FloorToInt(timer / 60) > 0 ? Mathf.FloorToInt(timer / 60) + " minute " : "") + Mathf.FloorToInt(timer % 60) + " seconds";
             yield return null;
         }
 
-        Debug.Log("You Ended with " + GemCounter._.Count + " Gems!");
+        started = false;
+        endPanel.SetActive(true);
+        ScoreData scoreData = ScoreSaver.LoadScoreData();
+        ScoreDatum currentScore = new ScoreDatum();
+        currentScore.gemCount = GemCounter._.Count;
+        currentScore.playIndex = ++scoreData.lastPlay;
+        currentScore.name = scoreData.lastName;
+        scoreData.data.Add(currentScore);
+        scoreData.data.Sort((ScoreDatum x, ScoreDatum y) => { return y.gemCount - x.gemCount; });
+        string highscores = "";
+        ScoreDatum sd;
+        for(int i=0; i<scoreData.data.Count && i<highscoreCount; i++)
+        {
+            sd = scoreData.data[i];
+            highscores += "Play " + sd.playIndex + ", Gems: " + sd.gemCount + "\n";
+        }
+        endHighScoreListText.text = highscores;
+        endScoreText.text = ("Current: Play " + currentScore.playIndex + ", Gems: " + currentScore.gemCount);
+        ScoreSaver.SaveScoreData(scoreData);
     }
 
     private void OnTriggerEnter(Collider other)
