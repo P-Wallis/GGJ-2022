@@ -144,7 +144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fuseLength: 2.5
-  explosionRadius: 5
+  explosionRadius: 4
   bombMesh: {fileID: 9025977276211618737}
   explosion: {fileID: 5542820809419505412}
 --- !u!1001 &797721108698787789

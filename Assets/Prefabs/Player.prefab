@@ -12056,7 +12056,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c90a024eae1c406bb26835af70d5462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  speed: 5
   rotationSpeed: 10
   model: {fileID: 8857213610338687894}
   fireParticles: {fileID: 6993400198675316409}
@@ -12071,6 +12071,8 @@ MonoBehaviour:
   - {fileID: 1330033189385536353, guid: 796bd5b76be7efb4daddc13caa89510b, type: 3}
   - {fileID: 4361382671063534466, guid: 770f4d5946562774aa2678fd703d970d, type: 3}
   - {fileID: 6880523351240427006, guid: 3eb37362af6c6c74799b54343e3a5015, type: 3}
+  startPanel: {fileID: 0}
+  startText: {fileID: 0}
 --- !u!54 &1640482361
 Rigidbody:
   m_ObjectHideFlags: 0

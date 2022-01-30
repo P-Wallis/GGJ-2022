@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Player : MonoBehaviour
@@ -31,6 +32,10 @@ public class Player : MonoBehaviour
 
     public GameObject[] gemPrefabs;
 
+    public GameObject startPanel;
+    public TextMeshProUGUI startText;
+    public float timerLength = 90f;
+    public TextMeshProUGUI timerText;
 
     private Animator m_animator;
     private Camera m_camera;
@@ -38,7 +43,8 @@ public class Player : MonoBehaviour
     private Plane m_groundPlane;
     private LayerMask iceLayerMask;
     private Weapon currentWeapon = Weapon.FIRE;
-    void Start()
+    private float timer;
+    IEnumerator Start()
     {
         m_rigidbody = GetComponent<Rigidbody>();
         m_camera = Camera.main;
@@ -46,6 +52,27 @@ public class Player : MonoBehaviour
         iceLayerMask = LayerMask.GetMask("Ice");
         m_animator = GetComponentInChildren<Animator>();
         m_animator.SetLayerWeight(1, 0);
+
+        startPanel.SetActive(true);
+        for (int i = 3; i > 0; i--)
+        {
+            startText.text = i.ToString();
+            yield return new WaitForSeconds(1);
+        }
+        startText.text = "Go!";
+        yield return new WaitForSeconds(1);
+        startPanel.SetActive(false);
+        started = true;
+
+        timer = timerLength;
+        while (timer > 0)
+        {
+            timer -= Time.deltaTime;
+            timerText.text = Mathf.FloorToInt(timer / 60) + " minutes " + Mathf.FloorToInt(timer % 60) + " seconds";
+            yield return null;
+        }
+
+        Debug.Log("You Ended with " + GemCounter._.Count + " Gems!");
     }
 
     private void OnTriggerEnter(Collider other)
@@ -58,9 +85,16 @@ public class Player : MonoBehaviour
         }
     }
 
+    bool started = false;
+
     Vector3 movement;
     private void Update()
     {
+        if(!started)
+        {
+            return;
+        }
+
         // Weapons
         switch (currentWeapon)
         {
