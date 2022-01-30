@@ -23,6 +23,8 @@ public class IceCube : MonoBehaviour
         this.y = y;
 
         SetDurability(durability * durabilityPercent);
+
+        cubeModel.rotation = Quaternion.Euler(new Vector3(Random.Range(-1, 3), Random.Range(-1, 3), Random.Range(-1, 3)) * 90);
     }
 
     public void Burn()

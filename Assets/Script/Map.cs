@@ -75,8 +75,7 @@ public class Map : MonoBehaviour
     {
         Vector3 pos = WorldFromArrayPos(x, y);
 
-        Vector3 randmRot = new Vector3(Random.Range(-1,2), Random.Range(-1, 2), Random.Range(-1, 2)) * 90;
-        GameObject go = Instantiate(hardy ? hardyIceCubePrefab : iceCubePrefab, pos, Quaternion.Euler(randmRot), this.transform);
+        GameObject go = Instantiate(hardy ? hardyIceCubePrefab : iceCubePrefab, pos, Quaternion.identity, this.transform);
         iceCubes[x, y] = go.GetComponent<IceCube>();
         iceCubes[x, y].Init(this, x, y, durabilityPercent);
     }
