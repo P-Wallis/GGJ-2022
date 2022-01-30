@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Player : MonoBehaviour
 {
+    // Animation Parameters
     const string WALK_FORWARD = "WalkForward";
+    const string WALK_RIGHT = "WalkRight";
     const string ATTACK = "Attack";
 
     public static Player _;
@@ -19,7 +22,9 @@ public class Player : MonoBehaviour
     public enum Weapon { FIRE, ICE }
 
     public float speed = 1;
-    public float rotationSpeed = 1;
+    public float attackRotationCorrection = 30;
+    public float attackIntroSpeed = 10;
+    public float walkBlendSpeed = 10;
     public Transform model;
 
     public int highscoreCount = 10;
@@ -41,6 +46,8 @@ public class Player : MonoBehaviour
     public GameObject endPanel;
     public TextMeshProUGUI endScoreText;
     public TextMeshProUGUI endHighScoreListText;
+    public Image weaponPanel;
+    public TextMeshProUGUI weaponText;
 
     private Animator m_animator;
     private Camera m_camera;
@@ -48,7 +55,7 @@ public class Player : MonoBehaviour
     private AudioSource m_audioFire;
     private Plane m_groundPlane;
     private LayerMask iceLayerMask;
-    private Weapon currentWeapon = Weapon.FIRE;
+    private Weapon currentWeapon;
     private float timer;
     IEnumerator Start()
     {
@@ -71,7 +78,8 @@ public class Player : MonoBehaviour
         startText.text = "Go!";
         yield return new WaitForSeconds(1);
         startPanel.SetActive(false);
-        started = true;
+        SetWeapon(Weapon.FIRE);
+        playing = true;
 
         timer = timerLength;
         while (timer > 0)
@@ -81,7 +89,7 @@ public class Player : MonoBehaviour
             yield return null;
         }
 
-        started = false;
+        playing = false;
         endPanel.SetActive(true);
         ScoreData scoreData = ScoreSaver.LoadScoreData();
         ScoreDatum currentScore = new ScoreDatum();
@@ -100,6 +108,7 @@ public class Player : MonoBehaviour
         endHighScoreListText.text = highscores;
         endScoreText.text = ("Current: Play " + currentScore.playIndex + ", Gems: " + currentScore.gemCount);
         ScoreSaver.SaveScoreData(scoreData);
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -112,12 +121,15 @@ public class Player : MonoBehaviour
         }
     }
 
-    bool started = false;
+    bool playing = false;
 
     Vector3 movement;
+    float attackWeight = 0;
+    float attackWeightTarget = 0;
+    Vector2 walkAnimBlend = Vector2.zero;
     private void Update()
     {
-        if(!started)
+        if (!playing)
         {
             return;
         }
@@ -129,8 +141,7 @@ public class Player : MonoBehaviour
                 if (Input.GetMouseButtonDown(0))
                 {
                     fireParticles.Play();
-                    m_animator.SetLayerWeight(1, 1);
-                    m_animator.SetTrigger(ATTACK);
+                    attackWeightTarget = 1;
                     m_audioFire.Play();
                 }
 
@@ -142,7 +153,7 @@ public class Player : MonoBehaviour
                 if (Input.GetMouseButtonUp(0))
                 {
                     fireParticles.Stop();
-                    m_animator.SetLayerWeight(1, 0);
+                    attackWeightTarget = 0;
                     m_audioFire.Stop();
                 }
                 break;
@@ -150,8 +161,7 @@ public class Player : MonoBehaviour
                 if (Input.GetMouseButtonDown(0))
                 {
                     iceParticles.Play();
-                    m_animator.SetLayerWeight(1, 1);
-                    m_animator.SetTrigger(ATTACK);
+                    attackWeightTarget = 1;
                 }
 
                 if (Input.GetMouseButton(0))
@@ -162,42 +172,26 @@ public class Player : MonoBehaviour
                 if (Input.GetMouseButtonUp(0))
                 {
                     iceParticles.Stop();
-                    m_animator.SetLayerWeight(1, 0);
+                    attackWeightTarget = 0;
                 }
                 break;
         }
 
         // Switch Weapon
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (fireParticles.isPlaying)
-                fireParticles.Stop();
-            if (iceParticles.isPlaying)
-                iceParticles.Stop();
-
-            currentWeapon = currentWeapon == Weapon.FIRE ? Weapon.ICE : Weapon.FIRE;
-
-            if (Input.GetMouseButton(0))
-            {
-                m_animator.SetTrigger(ATTACK);
-                switch (currentWeapon)
-                {
-                    case Weapon.FIRE:
-                        fireParticles.Play();
-                        break;
-                    case Weapon.ICE:
-                        iceParticles.Play();
-                        break;
-                }
-            }
+            SetWeapon(currentWeapon == Weapon.FIRE ? Weapon.ICE : Weapon.FIRE);
         }
+        attackWeight = Mathf.Lerp(attackWeight, attackWeightTarget, Time.deltaTime * attackIntroSpeed);
+        m_animator.SetLayerWeight(1, attackWeight);
 
 
         // Rotation
         Vector3 cursorPoint = ScreenToGroundPoint(Input.mousePosition);
 
-        Quaternion newRot = Quaternion.Euler(0, Mathf.Atan2(cursorPoint.x - transform.position.x, cursorPoint.z - transform.position.z) * Mathf.Rad2Deg, 0);
-        model.transform.rotation = newRot; //Quaternion.Lerp(model.transform.rotation, newRot, rotationSpeed * Time.deltaTime);
+        float angle = Mathf.Atan2(cursorPoint.x - transform.position.x, cursorPoint.z - transform.position.z) * Mathf.Rad2Deg;
+        float correction = attackRotationCorrection * attackWeight;
+        model.transform.rotation = Quaternion.Euler(0, angle + correction, 0);
 
 
         // Movement
@@ -209,7 +203,37 @@ public class Player : MonoBehaviour
 
         Vector3 lookDir = cursorPoint - transform.position;
         lookDir.y = 0;
-        m_animator.SetFloat(WALK_FORWARD, Vector3.Dot(lookDir, movement)); ;
+        float walkTowardLook = Vector3.Dot(lookDir, movement);
+        float walkOrthoganal = Vector3.Dot(lookDir, new Vector3(movement.z, 0, -movement.x));
+        walkAnimBlend = Vector2.Lerp(walkAnimBlend, new Vector2(walkOrthoganal, walkTowardLook), walkBlendSpeed * Time.deltaTime);
+        m_animator.SetFloat(WALK_RIGHT, walkAnimBlend.x);
+        m_animator.SetFloat(WALK_FORWARD, walkAnimBlend.y);
+    }
+
+    private void SetWeapon(Weapon weapon)
+    {
+        currentWeapon = weapon;
+
+        weaponPanel.color = weapon == Weapon.FIRE ? new Color(1, 0.7f, 0.7f) : new Color(0.7f, 0.8f, 1);
+        weaponText.text = "Current Element: " + weapon.ToString();
+
+        if (fireParticles.isPlaying)
+            fireParticles.Stop();
+        if (iceParticles.isPlaying)
+            iceParticles.Stop();
+
+        if (Input.GetMouseButton(0))
+        {
+            switch (weapon)
+            {
+                case Weapon.FIRE:
+                    fireParticles.Play();
+                    break;
+                case Weapon.ICE:
+                    iceParticles.Play();
+                    break;
+            }
+        }
     }
 
     void FixedUpdate()
