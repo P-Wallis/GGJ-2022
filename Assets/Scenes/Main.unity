@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -350,9 +350,11 @@ MonoBehaviour:
   gemPrefabs:
   - {fileID: 1524295687725455877, guid: a4f6901b43cd7444d9eb00636f1ee7c7, type: 3}
   - {fileID: 1330033189385536353, guid: 796bd5b76be7efb4daddc13caa89510b, type: 3}
+  crunchSFXPrefab: {fileID: 8492258720104937833, guid: 1292851f5caec46fabb3615d98e47009,
+    type: 3}
   cubeSize: 2
   mapSize: 16
-  fillPercent: 0.9
+  fillPercent: 0.098
   hardyPercent: 0.3
 --- !u!4 &645547872
 Transform:
