@@ -146,6 +146,10 @@ public class Player : MonoBehaviour
         {
             m_rigidbody.velocity = movement * speed;
         }
+        else
+        {
+            m_rigidbody.AddForce(explodeDir.normalized * 100);
+        }
     }
 
     private Vector3 ScreenToGroundPoint(Vector2 screenPos)
@@ -176,12 +180,12 @@ public class Player : MonoBehaviour
     }
 
     private bool exploding = false;
-    public void Explode(Vector3 explosionPos, float explosionRadius)
+    private Vector3 explodeDir;
+    public void Explode(Vector3 explosionPos)
     {
-        //exploding = true;
-        m_rigidbody.AddForce((transform.position - explosionPos).normalized * 10);
-
-        if(GemCounter._.Count > 0)
+        exploding = true;
+        explodeDir = (transform.position - explosionPos);
+        if (GemCounter._.Count > 0)
         {
             int half = Mathf.CeilToInt(GemCounter._.Count / 2f);
             GemCounter._.SetCount(GemCounter._.Count - half);
@@ -201,7 +205,7 @@ public class Player : MonoBehaviour
                 StartCoroutine(CleanUpGemThrow(rb, cl));
             }
         }
-        //StartCoroutine(CleanUpExlode());
+        StartCoroutine(CleanUpExlode());
     }
 
     IEnumerator CleanUpExlode()

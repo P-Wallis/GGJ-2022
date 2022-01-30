@@ -50,7 +50,7 @@ public class Bomb : MonoBehaviour
             {
                 if(hit.rigidbody != null && hit.rigidbody.gameObject.tag == "Player")
                 {
-                    Player._.Explode(transform.position, explosionRadius);
+                    Player._.Explode(transform.position);
                 }
             }
         }
