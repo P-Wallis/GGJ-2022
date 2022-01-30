@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1019958294160522192}
   - component: {fileID: -2566931253086670609}
   m_Layer: 0
-  m_Name: prop_gem_pointed
+  m_Name: PointedGem
   m_TagString: Gem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
