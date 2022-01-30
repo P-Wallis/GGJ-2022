@@ -143,7 +143,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad5a60fb48c744dfd86ac3b2e8eff1a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fuseLength: 1.5
+  fuseLength: 2.5
+  explosionRadius: 5
   bombMesh: {fileID: 9025977276211618737}
   explosion: {fileID: 5542820809419505412}
 --- !u!1001 &797721108698787789
