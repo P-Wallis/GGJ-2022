@@ -10010,6 +10010,8 @@ MonoBehaviour:
   raycastPoint: {fileID: 7155629529353908273}
   cubeCreatePoint: {fileID: 8581114694431319050}
   maxFireDistance: 4.5
+  gemPickupSFXPrefab: {fileID: 8492258720104937833, guid: ef02fe2d644b7443990f7d24b1560b21,
+    type: 3}
 --- !u!54 &1640482361
 Rigidbody:
   m_ObjectHideFlags: 0
