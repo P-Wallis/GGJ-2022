@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7992496220734915064
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7992496220734915014}
+  - component: {fileID: 7992496220734915065}
+  m_Layer: 0
+  m_Name: Map
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7992496220734915014
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7992496220734915064}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7992496220734915065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7992496220734915064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7dc98ac9e3d94ef0b767c22a5a21c1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  iceCubePrefab: {fileID: 5909262283410408979, guid: 8ed971ab9e8504d7f9c32c378ce8893d,
+    type: 3}
+  hardyIceCubePrefab: {fileID: 5909262283410408979, guid: 72637c483ed1b479db3440edc4eee680,
+    type: 3}
+  iceBurstPrefab: {fileID: 9106596439065482768, guid: df83186575a614593808dba9bac03ce7,
+    type: 3}
+  iceBurstInversePrefab: {fileID: 9106596439065482768, guid: 10aef17898895486b934d8a2ce0c3007,
+    type: 3}
+  bombPrefab: {fileID: 7492773917100042918, guid: ddecbcf66429e4540a7453993202ce5d,
+    type: 3}
+  gemPrefabs:
+  - {fileID: 1524295687725455877, guid: a4f6901b43cd7444d9eb00636f1ee7c7, type: 3}
+  - {fileID: 1330033189385536353, guid: 796bd5b76be7efb4daddc13caa89510b, type: 3}
+  - {fileID: 6880523351240427006, guid: 3eb37362af6c6c74799b54343e3a5015, type: 3}
+  - {fileID: 4361382671063534466, guid: 770f4d5946562774aa2678fd703d970d, type: 3}
+  crunchSFXPrefab: {fileID: 8492258720104937833, guid: 1292851f5caec46fabb3615d98e47009,
+    type: 3}
+  cubeSize: 2
+  mapSize: 16
+  fillPercent: 0.789
+  hardyPercent: 0.3

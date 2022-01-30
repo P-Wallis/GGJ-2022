@@ -28,7 +28,7 @@ public class GemCounter : MonoBehaviour
         UpdateCountText();
     }
 
-    public void setCount(int newCount)
+    public void SetCount(int newCount)
     {
         count = newCount;
         UpdateCountText();
