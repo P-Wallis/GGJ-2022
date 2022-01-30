@@ -92,6 +92,7 @@ public class Map : MonoBehaviour
             if (burst)
             {
                 GameObject burstGO = Instantiate(iceBurstPrefab, WorldFromArrayPos(x,y), Quaternion.identity);
+                Instantiate(crunchSFXPrefab, WorldFromArrayPos(x, y), Quaternion.identity); // play sound
                 Destroy(burstGO, 1);
             }
 
