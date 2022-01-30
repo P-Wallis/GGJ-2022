@@ -52,6 +52,7 @@ public class Player : MonoBehaviour
     private Animator m_animator;
     private Camera m_camera;
     private Rigidbody m_rigidbody;
+    private AudioSource m_audioFire;
     private Plane m_groundPlane;
     private LayerMask iceLayerMask;
     private Weapon currentWeapon;
@@ -59,11 +60,13 @@ public class Player : MonoBehaviour
     IEnumerator Start()
     {
         m_rigidbody = GetComponent<Rigidbody>();
+        m_audioFire = GetComponent<AudioSource>();
         m_camera = Camera.main;
         m_groundPlane = new Plane(Vector3.up, 0);
         iceLayerMask = LayerMask.GetMask("Ice");
         m_animator = GetComponentInChildren<Animator>();
         m_animator.SetLayerWeight(1, 0);
+        
 
         endPanel.SetActive(false);
         startPanel.SetActive(true);
@@ -139,6 +142,7 @@ public class Player : MonoBehaviour
                 {
                     fireParticles.Play();
                     attackWeightTarget = 1;
+                    m_audioFire.Play();
                 }
 
                 if (Input.GetMouseButton(0))
@@ -150,6 +154,7 @@ public class Player : MonoBehaviour
                 {
                     fireParticles.Stop();
                     attackWeightTarget = 0;
+                    m_audioFire.Stop();
                 }
                 break;
             case Weapon.ICE:
