@@ -6,6 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     const string WALK_FORWARD = "WalkForward";
+    const string ATTACK = "Attack";
 
     public static Player _;
     private void Awake()
@@ -44,6 +45,7 @@ public class Player : MonoBehaviour
         m_groundPlane = new Plane(Vector3.up, 0);
         iceLayerMask = LayerMask.GetMask("Ice");
         m_animator = GetComponentInChildren<Animator>();
+        m_animator.SetLayerWeight(1, 0);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -66,6 +68,8 @@ public class Player : MonoBehaviour
                 if (Input.GetMouseButtonDown(0))
                 {
                     fireParticles.Play();
+                    m_animator.SetLayerWeight(1, 1);
+                    m_animator.SetTrigger(ATTACK);
                 }
 
                 if (Input.GetMouseButton(0))
@@ -76,12 +80,15 @@ public class Player : MonoBehaviour
                 if (Input.GetMouseButtonUp(0))
                 {
                     fireParticles.Stop();
+                    m_animator.SetLayerWeight(1, 0);
                 }
                 break;
             case Weapon.ICE:
                 if (Input.GetMouseButtonDown(0))
                 {
                     iceParticles.Play();
+                    m_animator.SetLayerWeight(1, 1);
+                    m_animator.SetTrigger(ATTACK);
                 }
 
                 if (Input.GetMouseButton(0))
@@ -92,6 +99,7 @@ public class Player : MonoBehaviour
                 if (Input.GetMouseButtonUp(0))
                 {
                     iceParticles.Stop();
+                    m_animator.SetLayerWeight(1, 0);
                 }
                 break;
         }
@@ -108,7 +116,8 @@ public class Player : MonoBehaviour
 
             if (Input.GetMouseButton(0))
             {
-                switch(currentWeapon)
+                m_animator.SetTrigger(ATTACK);
+                switch (currentWeapon)
                 {
                     case Weapon.FIRE:
                         fireParticles.Play();
