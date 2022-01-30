@@ -62,6 +62,6 @@ MonoBehaviour:
   crunchSFXPrefab: {fileID: 8492258720104937833, guid: 1292851f5caec46fabb3615d98e47009,
     type: 3}
   cubeSize: 2
-  mapSize: 16
+  mapSize: 20
   fillPercent: 0.789
   hardyPercent: 0.3

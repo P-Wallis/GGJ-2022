@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Player : MonoBehaviour
 {
     const string WALK_FORWARD = "WalkForward";
+    const string ATTACK = "Attack";
 
     public static Player _;
     private void Awake()
@@ -20,6 +22,8 @@ public class Player : MonoBehaviour
     public float rotationSpeed = 1;
     public Transform model;
 
+    public int highscoreCount = 10;
+
     public ParticleSystem fireParticles, iceParticles;
     public Transform raycastPoint;
     public Transform cubeCreatePoint;
@@ -30,6 +34,13 @@ public class Player : MonoBehaviour
 
     public GameObject[] gemPrefabs;
 
+    public GameObject startPanel;
+    public TextMeshProUGUI startText;
+    public float timerLength = 90f;
+    public TextMeshProUGUI timerText;
+    public GameObject endPanel;
+    public TextMeshProUGUI endScoreText;
+    public TextMeshProUGUI endHighScoreListText;
 
     private Animator m_animator;
     private Camera m_camera;
@@ -37,13 +48,55 @@ public class Player : MonoBehaviour
     private Plane m_groundPlane;
     private LayerMask iceLayerMask;
     private Weapon currentWeapon = Weapon.FIRE;
-    void Start()
+    private float timer;
+    IEnumerator Start()
     {
         m_rigidbody = GetComponent<Rigidbody>();
         m_camera = Camera.main;
         m_groundPlane = new Plane(Vector3.up, 0);
         iceLayerMask = LayerMask.GetMask("Ice");
         m_animator = GetComponentInChildren<Animator>();
+        m_animator.SetLayerWeight(1, 0);
+
+        endPanel.SetActive(false);
+        startPanel.SetActive(true);
+        for (int i = 3; i > 0; i--)
+        {
+            startText.text = i.ToString();
+            yield return new WaitForSeconds(1);
+        }
+        startText.text = "Go!";
+        yield return new WaitForSeconds(1);
+        startPanel.SetActive(false);
+        started = true;
+
+        timer = timerLength;
+        while (timer > 0)
+        {
+            timer -= Time.deltaTime;
+            timerText.text = (Mathf.FloorToInt(timer / 60) > 0 ? Mathf.FloorToInt(timer / 60) + " minute " : "") + Mathf.FloorToInt(timer % 60) + " seconds";
+            yield return null;
+        }
+
+        started = false;
+        endPanel.SetActive(true);
+        ScoreData scoreData = ScoreSaver.LoadScoreData();
+        ScoreDatum currentScore = new ScoreDatum();
+        currentScore.gemCount = GemCounter._.Count;
+        currentScore.playIndex = ++scoreData.lastPlay;
+        currentScore.name = scoreData.lastName;
+        scoreData.data.Add(currentScore);
+        scoreData.data.Sort((ScoreDatum x, ScoreDatum y) => { return y.gemCount - x.gemCount; });
+        string highscores = "";
+        ScoreDatum sd;
+        for(int i=0; i<scoreData.data.Count && i<highscoreCount; i++)
+        {
+            sd = scoreData.data[i];
+            highscores += "Play " + sd.playIndex + ", Gems: " + sd.gemCount + "\n";
+        }
+        endHighScoreListText.text = highscores;
+        endScoreText.text = ("Current: Play " + currentScore.playIndex + ", Gems: " + currentScore.gemCount);
+        ScoreSaver.SaveScoreData(scoreData);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -56,9 +109,16 @@ public class Player : MonoBehaviour
         }
     }
 
+    bool started = false;
+
     Vector3 movement;
     private void Update()
     {
+        if(!started)
+        {
+            return;
+        }
+
         // Weapons
         switch (currentWeapon)
         {
@@ -66,6 +126,8 @@ public class Player : MonoBehaviour
                 if (Input.GetMouseButtonDown(0))
                 {
                     fireParticles.Play();
+                    m_animator.SetLayerWeight(1, 1);
+                    m_animator.SetTrigger(ATTACK);
                 }
 
                 if (Input.GetMouseButton(0))
@@ -76,12 +138,15 @@ public class Player : MonoBehaviour
                 if (Input.GetMouseButtonUp(0))
                 {
                     fireParticles.Stop();
+                    m_animator.SetLayerWeight(1, 0);
                 }
                 break;
             case Weapon.ICE:
                 if (Input.GetMouseButtonDown(0))
                 {
                     iceParticles.Play();
+                    m_animator.SetLayerWeight(1, 1);
+                    m_animator.SetTrigger(ATTACK);
                 }
 
                 if (Input.GetMouseButton(0))
@@ -92,6 +157,7 @@ public class Player : MonoBehaviour
                 if (Input.GetMouseButtonUp(0))
                 {
                     iceParticles.Stop();
+                    m_animator.SetLayerWeight(1, 0);
                 }
                 break;
         }
@@ -108,7 +174,8 @@ public class Player : MonoBehaviour
 
             if (Input.GetMouseButton(0))
             {
-                switch(currentWeapon)
+                m_animator.SetTrigger(ATTACK);
+                switch (currentWeapon)
                 {
                     case Weapon.FIRE:
                         fireParticles.Play();
