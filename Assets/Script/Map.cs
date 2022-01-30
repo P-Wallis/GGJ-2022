@@ -18,6 +18,8 @@ public class Map : MonoBehaviour
     public GameObject bombPrefab;
     public GameObject[] gemPrefabs;
 
+    public GameObject crunchSFXPrefab;
+
     public float cubeSize = 1;
     public int mapSize;
     float halfMap;
@@ -56,7 +58,9 @@ public class Map : MonoBehaviour
         {
             if(iceCubes[x,y] == null)
             {
-                GameObject burstGO = Instantiate(iceBurstInversePrefab, WorldFromArrayPos(x,y), Quaternion.identity);
+                Vector3 position = WorldFromArrayPos(x, y);
+                GameObject burstGO = Instantiate(iceBurstInversePrefab, position, Quaternion.identity, transform);
+                Instantiate(crunchSFXPrefab, position, Quaternion.identity); // play sound
                 Destroy(burstGO, 1);
                 CreateCubeAtLocation(x, y, false, 0);
             }
