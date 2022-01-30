@@ -62,11 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-<<<<<<< HEAD:Assets/Art/Prefabs/prop_gem_diamond.prefab
-  - {fileID: 2100000, guid: 51bb61adfaca3aa49b8c71ab8505ec8b, type: 2}
-=======
   - {fileID: 2100000, guid: ae2e7bf16a3b2484f84d6bd65c0d7309, type: 2}
->>>>>>> main:Assets/Art/Prefabs/BlueGem.prefab
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
