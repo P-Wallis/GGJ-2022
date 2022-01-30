@@ -6,7 +6,9 @@ using TMPro;
 [RequireComponent(typeof(Rigidbody))]
 public class Player : MonoBehaviour
 {
+    // Animation Parameters
     const string WALK_FORWARD = "WalkForward";
+    const string WALK_RIGHT = "WalkRight";
     const string ATTACK = "Attack";
 
     public static Player _;
@@ -19,7 +21,9 @@ public class Player : MonoBehaviour
     public enum Weapon { FIRE, ICE }
 
     public float speed = 1;
-    public float rotationSpeed = 1;
+    public float attackRotationCorrection = 30;
+    public float attackIntroSpeed = 10;
+    public float walkBlendSpeed = 10;
     public Transform model;
 
     public int highscoreCount = 10;
@@ -112,6 +116,9 @@ public class Player : MonoBehaviour
     bool started = false;
 
     Vector3 movement;
+    float attackWeight = 0;
+    float attackWeightTarget = 0;
+    Vector2 walkAnimBlend = Vector2.zero;
     private void Update()
     {
         if(!started)
@@ -126,8 +133,7 @@ public class Player : MonoBehaviour
                 if (Input.GetMouseButtonDown(0))
                 {
                     fireParticles.Play();
-                    m_animator.SetLayerWeight(1, 1);
-                    m_animator.SetTrigger(ATTACK);
+                    attackWeightTarget = 1;
                 }
 
                 if (Input.GetMouseButton(0))
@@ -138,15 +144,14 @@ public class Player : MonoBehaviour
                 if (Input.GetMouseButtonUp(0))
                 {
                     fireParticles.Stop();
-                    m_animator.SetLayerWeight(1, 0);
+                    attackWeightTarget = 0;
                 }
                 break;
             case Weapon.ICE:
                 if (Input.GetMouseButtonDown(0))
                 {
                     iceParticles.Play();
-                    m_animator.SetLayerWeight(1, 1);
-                    m_animator.SetTrigger(ATTACK);
+                    attackWeightTarget = 1;
                 }
 
                 if (Input.GetMouseButton(0))
@@ -157,7 +162,7 @@ public class Player : MonoBehaviour
                 if (Input.GetMouseButtonUp(0))
                 {
                     iceParticles.Stop();
-                    m_animator.SetLayerWeight(1, 0);
+                    attackWeightTarget = 0;
                 }
                 break;
         }
@@ -174,7 +179,6 @@ public class Player : MonoBehaviour
 
             if (Input.GetMouseButton(0))
             {
-                m_animator.SetTrigger(ATTACK);
                 switch (currentWeapon)
                 {
                     case Weapon.FIRE:
@@ -186,13 +190,16 @@ public class Player : MonoBehaviour
                 }
             }
         }
+        attackWeight = Mathf.Lerp(attackWeight, attackWeightTarget, Time.deltaTime * attackIntroSpeed);
+        m_animator.SetLayerWeight(1, attackWeight);
 
 
         // Rotation
         Vector3 cursorPoint = ScreenToGroundPoint(Input.mousePosition);
 
-        Quaternion newRot = Quaternion.Euler(0, Mathf.Atan2(cursorPoint.x - transform.position.x, cursorPoint.z - transform.position.z) * Mathf.Rad2Deg, 0);
-        model.transform.rotation = newRot; //Quaternion.Lerp(model.transform.rotation, newRot, rotationSpeed * Time.deltaTime);
+        float angle = Mathf.Atan2(cursorPoint.x - transform.position.x, cursorPoint.z - transform.position.z) * Mathf.Rad2Deg;
+        float correction = attackRotationCorrection * attackWeight;
+        model.transform.rotation = Quaternion.Euler(0, angle + correction, 0);
 
 
         // Movement
@@ -204,7 +211,11 @@ public class Player : MonoBehaviour
 
         Vector3 lookDir = cursorPoint - transform.position;
         lookDir.y = 0;
-        m_animator.SetFloat(WALK_FORWARD, Vector3.Dot(lookDir, movement)); ;
+        float walkTowardLook = Vector3.Dot(lookDir, movement);
+        float walkOrthoganal = Vector3.Dot(lookDir, new Vector3(movement.z, 0, -movement.x));
+        walkAnimBlend = Vector2.Lerp(walkAnimBlend, new Vector2(walkOrthoganal, walkTowardLook), walkBlendSpeed * Time.deltaTime);
+        m_animator.SetFloat(WALK_RIGHT, walkAnimBlend.x);
+        m_animator.SetFloat(WALK_FORWARD, walkAnimBlend.y);
     }
 
     void FixedUpdate()
